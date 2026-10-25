@@ -1,6 +1,14 @@
+
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:620012,100:D90429&height=210&section=header&text=INTIGRITI%20CTF&fontSize=66&fontColor=FFFFFF&fontAlignY=37&desc=Web%20Security%20Research%20%7C%20Write-ups%20%7C%20Proofs%20of%20Concept&descSize=17&descAlignY=59&descColor=FFC2CB" alt="Intigriti CTF — Web Security Research" width="100%" />
+  <img
+    src="https://raw.githubusercontent.com/MR-R00TX/MR-R00TX/main/.github%20/%20workflows/Intigriti-CTF-MR-R00TX-animated.gif"
+    alt="INTIGRITI CTF | MR-R00TX | Web Security Research"
+    width="100%"
+  />
+
+</div>
+
 
 # 🛡️ Intigriti CTF — Challenge Write-ups
 
