@@ -408,6 +408,10 @@ It's a good reminder that **business-logic validation must remain correct under 
 
 **Flag:** `INTIGRITI{094638e6-ba2f-4c50-8bb4-41ced0d5debd}`
 
+
+<img width="655" height="794" alt="image" src="https://github.com/user-attachments/assets/d481f6b6-04ac-463b-a7bd-6a82cf943c33" />
+
+
 ---
 
 *Research and write-up: [MD Monirul Islam / MR.R00TX](https://github.com/MR-R00TX) · Intigriti October 2026 CTF challenge.*
