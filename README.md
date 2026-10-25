@@ -125,7 +125,9 @@ Intigriti-CTF/
     ├── README.md                       # Race condition write-up
     ├── mixed_coupon_race.py            # Authorized challenge PoC
     └── assets/
-        └── halloween-store.png         # Challenge screenshot
+        ├── halloween-store-homepage.png # Challenge screenshot
+        └── POC.png                     # Race condition exploitation evidence
+
 ```
 
 The **September write-up** is already accessible via the Gist linked above. Local archive folders are added as their files are committed. Avoid uploading active session cookies, credentials, or unredacted personal information.
