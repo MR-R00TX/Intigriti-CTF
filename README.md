@@ -1,98 +1,183 @@
 <div align="center">
-🛡️ Intigriti CTF — Write-ups & Security Research
-Web Exploitation · Vulnerability Analysis · Proof of Concepts
-A structured collection of my solutions to Intigriti's monthly web security challenges.
-![Platform](https://img.shields.io/badge/Platform-Intigriti-ED1C24?style=for-the-badge)
-![Focus](https://img.shields.io/badge/Focus-Web%20Security-111827?style=for-the-badge&logo=owasp&logoColor=white)
-![Writeups](https://img.shields.io/badge/Write--ups-2%20Solved-159957?style=for-the-badge)
-![Language](https://img.shields.io/badge/Language-English-007ACC?style=for-the-badge)
-Maintained by MD Monirul Islam · `MR.R00TX`
-GitHub Profile · LinkedIn · Intigriti
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:620012,100:D90429&height=210&section=header&text=INTIGRITI%20CTF&fontSize=66&fontColor=FFFFFF&fontAlignY=37&desc=Web%20Security%20Research%20%7C%20Write-ups%20%7C%20Proofs%20of%20Concept&descSize=17&descAlignY=59&descColor=FFC2CB" alt="Intigriti CTF — Web Security Research" width="100%" />
+
+# 🛡️ Intigriti CTF — Challenge Write-ups
+
+**Monthly web security challenges · Reproducible research · Technical remediation**
+
+[![Platform](https://img.shields.io/badge/Platform-Intigriti-D90429?style=for-the-badge)](https://www.intigriti.com/)
+[![Category](https://img.shields.io/badge/Focus-Web%20Security-161B22?style=for-the-badge)](https://owasp.org/www-project-web-security-testing-guide/)
+![Write-ups](https://img.shields.io/badge/Documented%20Challenges-02-BC1C32?style=for-the-badge)
+![Language](https://img.shields.io/badge/PoC-Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+[![Author](https://img.shields.io/badge/Author-MR--R00TX-0D1117?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MR-R00TX)
+
+*Analyze the behavior. Validate the weakness. Demonstrate the impact. Document the fix.*
+
 </div>
+
 ---
-📖 About This Repository
-Welcome to Intigriti-CTF, my hands-on web application security research notebook.
-This repository documents how I approach authorized CTF challenges—from analyzing application behavior and identifying input vectors to reproducing vulnerabilities, understanding their impact, and recommending secure fixes.
-Each write-up focuses on the reasoning behind the exploit, not just the final payload or flag.
-What you'll find here:
-Reconnaissance and application behavior analysis
-Manual testing methodology and failed hypotheses
-Reproducible, challenge-specific proof-of-concept scripts
-HTTP requests, responses, and supporting evidence
-Root cause discussion, impact assessment, and remediation
-> [!IMPORTANT]
-> **Authorized testing only.** The techniques and PoCs in this repository are documented for designated Intigriti CTF environments and other systems where explicit permission has been granted. Challenge flags and full solutions should be shared publicly only when the applicable disclosure rules allow it.
----
-🏆 Challenge Archive
-Challenge	Vulnerability	Key Technique	Result	Write-up
-September 2026 — Critter Gallery	UNION-based SQL Injection	Base64 input analysis, MySQL enumeration	✅ Solved	Read Gist
-October 2026 — Halloween Store	Race Condition · CWE-362	Concurrent HTTP/2 coupon redemption, business logic	✅ Solved	Read write-up
-🔎 September 2026 — Critter Gallery
-Vulnerability: UNION-based SQL Injection  
-Attack surface: `GET /challenge.php?pic=...`
-The application accepted Base64-encoded critter names. By decoding the parameter and testing the underlying query behavior, I identified a single-column SQL injection, confirmed a reflected `UNION SELECT`, and enumerated database metadata in the challenge environment.
-Takeaway: Encoding is not sanitization; SQL queries need parameterization and appropriate database permissions.
-📄 Full September write-up on GitHub Gist
-⚡ October 2026 — Halloween Store
-Vulnerability: Race Condition / TOCTOU · CWE-362  
-Attack surface: `POST /api/cart/coupon`
-The store rejected sequential duplicate coupon redemptions, but concurrent HTTP/2 requests exposed inconsistent enforcement. During a successful test, 9 of 13 requests were accepted, repeatedly applying `NEWS30` and `NIGHT20` and reducing a €666.00 cart to €0.00. The challenge was completed through a confirmed zero-cost checkout.
-Takeaway: Coupon validation, redemption state changes, and checkout revalidation must withstand concurrent requests.
-📄 October write-up · 🧪 Python race-condition PoC
----
-🧠 My Testing Methodology
+
+## 📜 [ 0x01 ] About This Repository
+
+> **Research log:** `[+] Authorized CTF environment detected — documentation initialized`
+
+Welcome to **Intigriti-CTF**, my collection of technical write-ups for Intigriti's web security challenges.
+
+Each case study documents the path from **initial observations** to **vulnerability discovery**, **proof-of-concept validation**, **impact analysis**, and **remediation**. The goal is not just to capture a flag, but to explain *why* the vulnerability exists and how a developer can prevent it.
+
+**Research focus:** Web application security, SQL injection, HTTP/API testing, concurrency vulnerabilities, and business logic abuse.
+
+## 🗂️ [ 0x02 ] Challenge Archive
+
+| Month | Challenge | Vulnerability | Technical Highlight | Write-up |
+|:---|:---|:---|:---|:---|
+| **September 2026** | **Critter Gallery** | SQL Injection · `CWE-89` | Base64-decoded `pic` parameter → UNION-based SQL injection → database enumeration | [Read published Gist](https://gist.github.com/MR-R00TX/76d7802c6ad63295c5ec8b3a02f97f7d) |
+| **October 2026** | **Halloween Store** | Race Condition · `CWE-362` | Concurrent coupon redemption → unauthorized discount stacking → zero-cost checkout | [Read case study](./October-2026-Halloween-Store/README.md) |
+
+> **Publication note:** Challenge solutions and flags should be made public only when permitted by the organizer's disclosure rules. The October case-study link becomes active after its `README.md` is uploaded to the folder shown below.
+
+## 🔎 [ 0x03 ] Featured Research
+
+### `0x01` — Critter Gallery | September 2026
+
+**Category:** UNION-based SQL Injection (`CWE-89`)
+
+- Identified a Base64-encoded `pic` GET parameter (`Zm94` → `fox`).
+- Tested the decoded input and confirmed SQL injection with `ORDER BY` and `UNION SELECT`.
+- Fingerprinted **MySQL 8.0.46** and explored `information_schema`.
+- Demonstrated unauthorized access to the challenge's `secret_vault` table.
+
+**Key lesson:** Encoding an input does not make it safe for SQL queries. Use parameterized queries and least-privilege database accounts.
+
+**Full write-up:** [Critter Gallery — Intigriti September 2026](https://gist.github.com/MR-R00TX/76d7802c6ad63295c5ec8b3a02f97f7d)
+
+### `0x02` — Halloween Store | October 2026
+
+**Category:** Race Condition / Business Logic (`CWE-362`)
+
+**Target workflow:** `POST /api/cart/coupon` → `GET /api/cart` → `POST /api/checkout`
+
+- Normal duplicate coupon submissions returned **HTTP 409 Conflict**.
+- A synchronized set of **13 concurrent HTTP/2 requests** resulted in **9 accepted redemptions**.
+- The cart recorded `NEWS30` **5 times** and `NIGHT20` **4 times**.
+- The **nominal** promotional discount reached **230%**, while the effective discount was capped at the order subtotal.
+- The payable amount fell from **€666.00** to **€0.00**; checkout was successfully completed in the challenge environment.
+
+**Key lesson:** A validation check that works for sequential requests may fail under concurrency. Enforce usage limits atomically and revalidate promotions at checkout.
+
+**Technical case study:** [Halloween Store — Intigriti October 2026](./October-2026-Halloween-Store/README.md)
+
+## ⚔️ [ 0x04 ] Tools & Techniques
+
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![httpx](https://img.shields.io/badge/httpx-HTTP%2F2-1F6FEB?style=flat-square)
+![asyncio](https://img.shields.io/badge/asyncio-Concurrency-C2185B?style=flat-square)
+![Burp Suite](https://img.shields.io/badge/Burp%20Suite-FF6633?style=flat-square&logo=burpsuite&logoColor=white)
+![DevTools](https://img.shields.io/badge/Browser-DevTools-3B82F6?style=flat-square)
+![MySQL](https://img.shields.io/badge/MySQL-SQLi%20Analysis-4479A1?style=flat-square&logo=mysql&logoColor=white)
+![Markdown](https://img.shields.io/badge/Markdown-Documentation-000000?style=flat-square&logo=markdown&logoColor=white)
+
+</div>
+
+| Area | Approach |
+|:---|:---|
+| **Attack-surface analysis** | Identify routes, parameters, state transitions, and security controls |
+| **Web/API testing** | Examine HTTP requests, responses, cookies, and server-side behavior |
+| **Injection analysis** | Compare SQL behavior, identify reflection points, and validate impact |
+| **Concurrency testing** | Use Python `asyncio`, `httpx`, and synchronized requests |
+| **Business logic** | Test pricing rules, coupon restrictions, checkout state, and authorization |
+| **Documentation** | Reproducible steps, redacted evidence, root cause, and recommended fixes |
+
+## 🧭 [ 0x05 ] Research Methodology
+
 ```text
-Recon & First Look
-        ↓
-Map Inputs, Requests & State
-        ↓
-Build Hypotheses
-        ↓
-Test Manually & Capture Evidence
-        ↓
-Reproduce the Vulnerability
-        ↓
-Assess Impact & Root Cause
-        ↓
-Document Findings & Remediation
+┌─────────────────────── INTIGRITI CTF WORKFLOW ───────────────────────┐
+│                                                                     │
+│  01  INITIAL RECON     →  Understand the challenge and attack surface│
+│  02  BEHAVIOR MAPPING  →  Study requests, parameters, and state      │
+│  03  HYPOTHESIS       →  Identify a possible security weakness      │
+│  04  VALIDATION       →  Test safely in the authorized environment  │
+│  05  IMPACT PROOF     →  Capture reproducible evidence              │
+│  06  ROOT CAUSE       →  Explain the technical failure              │
+│  07  REMEDIATION      →  Recommend practical defensive controls     │
+│  08  WRITE-UP         →  Share findings when disclosure is allowed  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
-My write-ups distinguish directly observed results from inferred implementation details, and redact session cookies, credentials, and other sensitive values.
----
-🛠️ Tools & Topics
-Area	Tools / Concepts
-HTTP & Web Testing	Burp Suite, browser developer tools, request/response analysis
-Scripting	Python, `asyncio`, `httpx`
-Injection Testing	SQL Injection, `UNION SELECT`, MySQL `information_schema`
-Application Logic	Race Conditions, TOCTOU, coupon and checkout validation
-Reporting	Reproduction steps, evidence, CWE classification, remediation
----
-📂 Repository Structure
+
+## 📂 [ 0x06 ] Repository Structure
+
+This is the **recommended layout** as the archive grows:
+
 ```text
 Intigriti-CTF/
 │
-├── README.md                        # Repository overview (this file)
+├── README.md                           # Main repository overview
 │
 ├── September-2026-Critter-Gallery/
-│   └── README.md                    # Optional local copy of the Gist
+│   ├── README.md                       # SQL injection write-up
+│   └── assets/                         # Screenshots (optional)
 │
 └── October-2026-Halloween-Store/
-    ├── README.md                    # Full October challenge write-up
-    ├── assets/
-    │   └── halloween-store-homepage.png
-    └── poc/
-        └── mixed_coupon_race.py
+    ├── README.md                       # Race condition write-up
+    ├── mixed_coupon_race.py            # Authorized challenge PoC
+    └── assets/
+        └── halloween-store.png         # Challenge screenshot
 ```
-The September write-up is already available as a Gist; its local folder can be added later. The October folder structure matches the provided GitHub write-up package.
----
-🔗 Explore My Other Security Work
-🧪 PortSwigger Web Security Academy — Web vulnerability labs and learning notes
-🖥️ HackTheBox — Offensive security lab write-ups
-🚩 TryHackMe — CTF practice and technical notes
-🛡️ Advanced Penetration Testing — Assessment methodologies and research notes
----
+
+The **September write-up** is already accessible via the Gist linked above. Local archive folders are added as their files are committed. Avoid uploading active session cookies, credentials, or unredacted personal information.
+
+## 📝 [ 0x07 ] Write-up Standards
+
+Every published write-up aims to include:
+
+1. **Challenge Overview** — context, objective, and relevant application behavior.
+2. **Discovery Process** — initial observations and test hypotheses.
+3. **Proof of Concept** — precise steps, HTTP requests, and scripts when relevant.
+4. **Observed Results** — response data, screenshots, and measurable outcomes.
+5. **Root Cause** — an evidence-based explanation, with unverified assumptions clearly identified.
+6. **Security Impact** — demonstrated effect versus potential real-world impact.
+7. **Remediation** — specific server-side and persistence-layer controls.
+8. **Key Takeaways** — transferable security lessons.
+
+## 🔐 [ 0x08 ] Responsible Disclosure
+
+> [!IMPORTANT]
+> This repository documents **authorized Intigriti CTF exercises**. It is not permission to test unrelated infrastructure.
+
+- Respect each challenge's scope, terms, and publication rules.
+- Keep solutions and flags private until public disclosure is allowed.
+- Redact session identifiers, credentials, tokens, and personal data.
+- Distinguish confirmed observations from inferred implementation details.
+- Reuse the techniques only in environments where you have explicit authorization.
+
+## 👤 [ 0x09 ] About the Author
+
+**MD Monirul Islam** — **MR.R00TX**  
+*Web Application Security · Offensive Security Research · CTF Write-ups*
+
+This archive complements my other hands-on security research and documentation projects:
+
+| Portfolio | Focus |
+|:---|:---|
+| [PortSwigger Web Security Academy](https://github.com/MR-R00TX/PortSwigger-Web-Security-Academy) | Web vulnerability labs and analysis |
+| [HackTheBox](https://github.com/MR-R00TX/HackTheBox) | Machine walkthroughs and exploitation methodology |
+| [TryHackMe](https://github.com/MR-R00TX/TryHackMe) | Practical security challenges |
+| [Advanced Penetration Testing](https://github.com/MR-R00TX/Advanced-Penetration-Testing) | Lab assessments, techniques, and reporting |
+
 <div align="center">
-Learn → Test → Understand → Document → Improve
-Built for ethical security research and continuous learning.
-![GitHub](https://img.shields.io/badge/GitHub-MR--R00TX-181717?style=flat-square&logo=github)
-![LinkedIn](https://img.shields.io/badge/LinkedIn-MD%20Munna-0A66C2?style=flat-square&logo=linkedin)
+
+[![GitHub](https://img.shields.io/badge/GitHub-MR--R00TX-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MR-R00TX)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-mdmunna--sec-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mdmunna-sec/)
+[![Email](https://img.shields.io/badge/Email-Contact-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:munna@seccrown.com)
+
+---
+
+**Research. Validate. Document. Secure.**
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:620012,100:D90429&height=110&section=footer" alt="Footer wave" width="100%"/>
+
 </div>
