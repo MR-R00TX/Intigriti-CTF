@@ -2,7 +2,7 @@
 
 # Halloween Store — Intigriti October 2026 Challenge Write-up
 
-**Author:** MD Monirul Islam ([@MR-R00TX](https://github.com/MR-R00TX))  
+**Author:** MD Munna ([@MR-R00TX](https://github.com/MR-R00TX))  
 **Challenge:** Intigriti October 2026 — Halloween Store  
 **Category:** Race Condition / Business Logic  
 **Classification:** CWE-362 — Concurrent Execution Using Shared Resource with Improper Synchronization  
